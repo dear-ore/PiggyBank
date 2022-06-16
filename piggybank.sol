@@ -4,12 +4,13 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract PiggyBank {
     using SafeMath for uint256;
-    
+
     address public checking_account;
     address public savings_account;
     address public locked;
     uint public lockTime; //enter in days, get results in seconds/milliseconds
     mapping(address => uint) balance;
+    uint LT;
 
     modifier diffAcc(address addr1, address addr2) {
         require (addr1 != addr2);
@@ -66,11 +67,12 @@ contract PiggyBank {
         to = locked;
         balance[locked] = balance[locked].add(_amount);
         balance[from] = balance[from].sub(_amount);
-        lockTime = block.timestamp + (_locktime  * 1 days);
+        lockTime = _locktime  * 1 days;
+        LT = block.timestamp + lockTime;
     }
 
-    function withdrawFromLocked (uint _amount, address from, address to ) public diffAcc(from, to) {
-        if(block.timestamp < lockTime){
+    function withdrawFromLocked (uint _amount) public {
+        if(block.timestamp < LT){
             revert notYetTime();
         }
         else {
