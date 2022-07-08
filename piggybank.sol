@@ -51,7 +51,7 @@ contract PiggyBank {
         emit fundsTransferred("Transfer successful");
     }
 
-    function withdrawToChecking(address payable from, address payable to, uint amount) public onlyOwner diffAcc(from, to){
+    function withdrawToChecking(address payable to, uint amount) public onlyOwner diffAcc(from, to){
         require(to == checking_account, "You have entered an incorrect address");
         to.transfer(amount);
         if (from.balance < amount) {
@@ -61,7 +61,7 @@ contract PiggyBank {
     }
 
 
-    function lockFunds(uint _amount, address payable from, address payable to, uint _locktime) payable public diffAcc(from, to) onlyOwner {
+    function lockFunds(uint _amount, address payable to, uint _locktime) payable public diffAcc(from, to) onlyOwner {
         require(to == locked, "You have entered an incorrect address");
         to.transfer(_amount);
         lockTime = _locktime  * 1 days;
